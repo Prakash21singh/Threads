@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.cl-avatarBox {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-}
-
 @layer components {
   /* main */
   .main-container {
@@ -146,7 +140,7 @@
 
 /* Account Profile  */
 .account-form_image-label {
-  @apply flex h-24 w-24 items-center justify-center rounded-full bg-dark-4 !important;
+  @apply flex h-24 w-24 items-center justify-center overflow-hidden object-center rounded-full bg-dark-4 !important;
 }
 
 .account-form_image-input {
