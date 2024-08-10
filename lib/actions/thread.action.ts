@@ -80,3 +80,40 @@ export async function fetchPost(pageNumber = 1, pageSize = 20) {
     throw new Error(`Failed to fetch: ${error.message}`);
   }
 }
+
+export async function getThreadById(id: string) {
+  try {
+    connectDB();
+
+    // Populate community
+    let post = await Thread.findById(id)
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id id name image",
+      })
+      .populate({
+        path: "children",
+        populate: [
+          {
+            path: "author",
+            model: User,
+            select: "_id id name parentId image",
+          },
+          {
+            path: "children",
+            model: Thread,
+            populate: {
+              path: "author",
+              model: User,
+              select: "_id id name parentId image",
+            },
+          },
+        ],
+      })
+      .exec();
+    return post;
+  } catch (error: any) {
+    throw new Error("Error getting thread by ID:", error.message);
+  }
+}
