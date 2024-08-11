@@ -80,7 +80,7 @@ export async function fetchPost(pageNumber = 1, pageSize = 20) {
     throw new Error(`Failed to fetch: ${error.message}`);
   }
 }
-
+// FETCH THREAD BY ID
 export async function getThreadById(id: string) {
   try {
     connectDB();
@@ -115,5 +115,33 @@ export async function getThreadById(id: string) {
     return post;
   } catch (error: any) {
     throw new Error("Error getting thread by ID:", error.message);
+  }
+}
+
+export async function addCommentToThread(
+  threadId: string,
+  commentText: string,
+  userId: string,
+  path: string
+) {
+  connectDB();
+  try {
+    // Adding a comment
+    // Create a thread with a parent id and push the created thread into parent threads children
+    const originalThread = await Thread.findById(threadId);
+    if (!originalThread) throw new Error("Thread not found");
+    const commentThread = new Thread({
+      text: commentText,
+      author: userId,
+      parentId: threadId,
+    });
+
+    const savedThread = await commentThread.save();
+    originalThread.children.push(savedThread._id);
+
+    await originalThread.save();
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error("Error adding a comment to thread", error.message);
   }
 }
