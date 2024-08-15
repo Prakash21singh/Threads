@@ -67,7 +67,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
-        console.log(imageDataUrl);
+
         fieldChange(imageDataUrl);
       };
 
@@ -76,7 +76,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   };
 
   async function onSubmit(values: z.infer<typeof UserValidation>) {
-    console.log(values);
     const blob = values.profile_photo;
     const hasImageChange = isBase64Image(blob);
 
